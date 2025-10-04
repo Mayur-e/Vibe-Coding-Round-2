@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buggy Mobile Menu (AI & Prompts Track)</title>
+  <style>
+    :root { --bg:#0f172a; --fg:#e2e8f0; --accent:#3b82f6; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:0; color:var(--fg); background:#0b1020; }
+    header { background: var(--bg); border-bottom: 1px solid #23304f; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 12px 16px; display:flex; align-items:center; justify-content:space-between; }
+    .brand { font-weight: 800; letter-spacing:.2px; }
+    /* BAD: outline removed (breaks keyboard focus visibility) */
+    /* FIX: restore visible focus */
+    a:focus, button:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    nav ul { list-style: none; margin:0; padding:0; display:flex; gap:16px; }
+    nav a { color: var(--fg); text-decoration: none; padding:8px 10px; border-radius:8px; }
+    nav a:hover { background: #1b2542; }
+    /* Mobile */
+    @media (max-width:640px) {
+      nav ul { display:none; } /* hidden by default */
+      nav ul.open { display:block; background: #0f1a33; margin-top:8px; padding:8px; border-radius:10px; }
+      nav li { margin:6px 0; }
+      #menuToggle { display:inline-flex; align-items:center; gap:8px; background:#0f1a33; color:var(--fg); border:1px solid #23304f; padding:8px 10px; border-radius:10px; }
+    }
+    main { max-width:960px; margin: 20px auto; padding: 0 16px; color:#c0c8d8; }
+    code { background:#0f1a33; border:1px solid #23304f; padding:2px 6px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">Sample Site</div>
+      <nav>
+        <!-- FIX: add aria-controls for relationship -->
+        <button id="menuToggle" aria-expanded="false" aria-controls="mobileMenu">☰ Menu</button>
+        <ul id="mobileMenu" class="">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Docs</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Buggy Mobile Menu</h1>
+    <p>This file intentionally contains accessibility and behavior bugs for the base task.</p>
+    <ul>
+      <li>Menu should open/close on mobile (≤640px).</li>
+      <li>Keyboard operation required (Enter/Space on the toggle).</li>
+      <li>Visible focus styles should be present.</li>
+    </ul>
+    <p><strong>Notes:</strong> Only edit this file (and your JS inside it). Do not add libraries.</p>
+    <p><em>Tip:</em> Use the “Critique → Refine” prompt pattern to iterate on your fixes.</p>
+  </main>
+
+  <!-- BUGGY SCRIPT: selector mismatch; toggles wrong class; no keyboard support; no ARIA updates -->
+  <script>
+    // TODO: Fix the menu so it opens/closes on mobile and supports keyboard.
+    // Problems to spot:
+    //  - The selector below points to an element that doesn't exist (#menu).
+    //  - The JS toggles a class named 'opened' but CSS expects 'open'.
+    //  - No keyboard accessibility (Enter/Space) and no aria-expanded updates.
+    //  - Focus outline is disabled via CSS.
+
+    // FIX: correct selector to #menuToggle
+    const btn = document.getElementById('menuToggle');
+    const menu = document.getElementById('mobileMenu');
+
+    function toggle() {
+      // FIX: toggle correct class 'open'
+      const isOpen = menu.classList.toggle('open');
+      // FIX: update aria-expanded state
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+
+    if (btn) {
+      // FIX: add click handler
+      btn.addEventListener('click', toggle);
+      // FIX: add keyboard handler for Enter/Space
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
